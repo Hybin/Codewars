@@ -12,6 +12,7 @@
 #include <cmath>
 #include <algorithm>
 #include <cstdlib>
+#include <numeric>
 
 using namespace std;
 
@@ -404,25 +405,25 @@ class Fracts
 {
 public:
     static string convertFrac(vector<vector<unsigned long long>> &lst);
-    static unsigned long long leastCommonMulti(vector<unsigned long long> &nums);
+    static unsigned long long gcd(unsigned long long a, unsigned long long b);
+    static unsigned long long lcm(unsigned long long a, unsigned long long b);
 };
 
-unsigned long long Fracts::leastCommonMulti(vector<unsigned long long> &nums)
+unsigned long long Fracts::gcd(unsigned long long a, unsigned long long b)
 {
-    unsigned long long maxNum = *max_element(nums.begin(), nums.end());
-    while (true) {
-        int count = 0;
-        for (auto &i : nums) {
-            if (maxNum % i == 0)
-                ++count;
-        }
-        
-        if (count == nums.size())
-            break;
-        else
-            ++maxNum;
+    for (; ;) {
+        if (a == 0) return b;
+        b %= a;
+        if (b == 0) return a;
+        a %= b;
     }
-    return maxNum;
+}
+
+unsigned long long Fracts::lcm(unsigned long long a, unsigned long long b)
+{
+    unsigned long long temp = gcd(a, b);
+    
+    return temp ? (a / temp * b) : 0;
 }
 
 string Fracts::convertFrac(vector<vector<unsigned long long>> &lst)
@@ -433,7 +434,7 @@ string Fracts::convertFrac(vector<vector<unsigned long long>> &lst)
         denom.push_back(v[1]);
     }
     
-    unsigned long long lcm = Fracts::leastCommonMulti(denom);
+    unsigned long long lcm = accumulate(denom.begin(), denom.end(), 1, Fracts::lcm);
     for (auto &v : lst) {
         v[0] = lcm / v[1] * v[0];
         v[1] = lcm;
