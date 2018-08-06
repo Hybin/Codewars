@@ -13,6 +13,8 @@
 #include <algorithm>
 #include <cstdlib>
 #include <numeric>
+#include <map>
+#include <cctype>
 
 using namespace std;
 
@@ -444,10 +446,38 @@ string Fracts::convertFrac(vector<vector<unsigned long long>> &lst)
     return res;
 }
 
+// --------------------------------------------------------------
+
+string unlock (string str)
+{
+    string res = "";
+    
+    for (auto &s : str) {
+        s = tolower(s);
+    }
+    
+    vector<char> alpha = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                          'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'},
+                 score = {'2', '2', '2', '3', '3', '3', '4', '4', '4', '5', '5', '5', '6',
+                          '6', '6', '7', '7', '7', '7', '8', '8', '8', '9', '9', '9', '9'};
+    
+    map<char, char> code;
+    map<char, char>::iterator it;
+    
+    for (int i = 0; i < 26; ++i)
+        code[alpha[i]] = score[i];
+    
+    for (auto &s : str) {
+        it = code.find(s);
+        if (it != code.end())
+            res += it->second;
+    }
+    return res;
+}
+
 
 int main(int argc, const char * argv[]) {
-    std::vector<std::vector<unsigned long long>> r1 = { {1, 2}, {1, 3}, {1, 4} };
-    std::string ans1 = Fracts::convertFrac(r1);
-    cout << ans1 << endl;
+    string s = "Nokia";
+    cout << unlock(s) << endl;
     return 0;
 }
